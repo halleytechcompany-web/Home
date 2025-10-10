@@ -2,361 +2,336 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="https://necolas.github.io/normalize.css/3.0.1/normalize.css">
-<script src="https://code.jquery.com/jquery-latest.js"></script>
-<link rel="stylesheet" href="https://i.icomoon.io/public/temp/3c94f042fc/UntitledProject2/style.css">
-<style>
- body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: url('fondo.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
-            background-size: cover;
-        }
-	  margin: 0;
-  padding: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halleytech</title>
+  <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
 body {
-  display: -webkit-box;
-  display: -ms-flexbox;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Roboto', sans-serif;
+  background: url('fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #1d1d1f;
+  line-height: 1.4;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
-  background: #16384c;
-  font-family: 'Roboto', sans-serif;
-}
-* {
-	margin:0;
-	padding:0;
 }
 
-ul, ol {
-	list-style: none;
-}
+    /* Navegación */
+    header {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
 
-header {|
-	width:100%;
-}
+    nav {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+    }
 
-nav {
-	width:  1000px;
-	margin:20px auto;
-	overflow:hidden;
-	border-radius:4px;
-	border-bottom:1px solid #555555;
+    .menu {
+      display: flex;
+      list-style: none;
+      flex: 1;
+      justify-content: center;
+    }
 
-	background: #8b8b8b; /* Old browsers */
-	background: -moz-linear-gradient(top,  #8b8b8b 0%, #6a6a6a 50%, #5e5e5e 51%, #717171 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8b8b8b), color-stop(50%,#6a6a6a), color-stop(51%,#5e5e5e), color-stop(100%,#717171)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8b8b8b', endColorstr='#717171',GradientType=0 ); /* IE6-9 */
-}
+    .menu li {
+      margin: 0 20px;
+    }
 
-.menu {
-	width:85%;
-	display:table;
-	table-layout:fixed;
-	float:left;
-	transition:all .5s ease;
-}
+    .menu li a {
+      color: #f5f5f7;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: opacity 0.3s ease;
+    }
 
-.menu li {
-	display:table-cell;
-	overflow:hidden;
-	width:100%;
-	border-right:1px solid #5c5c5c;
-	border-left:1px solid rgba(255,255,255,.2);
-}
+    .menu li a:hover {
+      opacity: 0.7;
+    }
 
-.menu li:first-child {
-	border-left:none;
-}
+    .search_bar {
+      position: relative;
+      width: 200px;
+    }
 
-.menu li:first-child:hover {
-	border-left:none;
-}
+    .search_bar input {
+      width: 100%;
+      padding: 8px 16px 8px 36px;
+      border: none;
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
 
-.menu li a {
-	color:#fff;
-	display:block;
-	font-family:"Myriad Pro";
-	font-size:14px;
-	padding:10px 0;
-	text-align:center;
-	text-decoration:none;
-	text-shadow:1px 1px 0px rgba(0,0,0,.3);
-}
+    .search_bar input:focus {
+      background-color: #fff;
+      color: #000;
+      outline: none;
+    }
 
-.menu li:hover {
-	background:rgba(0,0,0,.3);
-	border-right:1px solid transparent;
-	border-left:1px solid transparent;
-	border-bottom:none;
-}
+    .icon-search {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 14px;
+    }
 
-.menu li:active {
-	background:rgba(0,0,0,.3);
-	box-shadow:inset 0px 3px 2px rgba(0,0,0,1);
-}
+    .icon-search:hover, .search_bar input:focus + .icon-search {
+      color: #000;
+    }
 
-.search_bar {
-	width:15%;
-	float:left;
-	padding:7px 10px;
-	box-sizing:border-box;
-	position: relative;
-	transition:all .5s ease;
-}
+    /* Contenido principal */
+    h1 {
+      font-size: 48px;
+      font-weight: 600;
+      margin: 100px 0 40px;
+      text-align: center;
+    }
 
-.search_bar input {
-	width:100%;
-	height:auto;
-	border-radius:50px;
-	border:none;
-	border-bottom:1px solid #858585;
-	padding:0px 10px 0px 25px;
-	box-sizing:border-box;
-	height:22px;
-
-	box-shadow:inset 0px 1px 3px rgba(0,0,0,.7);
-
-	background: #7e7e7e; /* Old browsers */
-	background: -moz-linear-gradient(top,  #7e7e7e 0%, #797979 50%, #6e6e6e 51%, #767676 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7e7e7e), color-stop(50%,#797979), color-stop(51%,#6e6e6e), color-stop(100%,#767676)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7e7e7e', endColorstr='#767676',GradientType=0 ); /* IE6-9 */
-}
-
-.search_bar input:focus {
-	background:#fff;
-	box-shadow:none;
-}
-
-.icon-house {
-	display:block;
-	position:relative;
-	top:2px;
-}
-
-.icon-search {
-	position:absolute;
-	bottom:10px;
-	left:15px;
-	color:#fff;
-	text-decoration:none;
-}
- h3 {
- color: black; font-size: 35px;
- text-shadow: 2px 2px #465FFF;
- font-family:Verdana;
- }
-
-.container {
-  position: relative;
-  width: 1100px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -ms-flex-wrap: wrap;
+    .container {
+      max-width: 1100px;
+      display: flex;
       flex-wrap: wrap;
-  padding: 30px;
-}
+      justify-content: center;
+      padding: 30px;
+    }
 
-.container .card {
-  position: relative;
-  max-width: 320px;
-  height: 250px;
-  background: #ccc;
-  margin: 30px 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  -webkit-transition: .3s ease-in-out;
-  transition: .3s ease-in-out;
-}
+    .container .card {
+      position: relative;
+      width: 300px;
+      height: 400px;
+      background: #fff;
+      margin: 20px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.container .card:hover {
-  height: 360px;
-}
+    .container .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
 
-.container .card:hover .content {
-  visibility: visible;
-  opacity: 1;
-  margin-top: -20px;
-  -webkit-transition-delay: .3s;
-          transition-delay: .3s;
-}
+    .container .card .imgbox {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
 
-.container .card .imgbox {
-  position: relative;
-  height: 260px;
-  width: 260px;
-  top: -40px;
-  left: 30px;
-  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-}
+    .container .card .imgbox img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px 18px 0 0;
+    }
 
-.container .card .imgbox img {
-  max-width: 100%;
-  border-radius: 4px;
-}
+    .container .card .content {
+      padding: 20px;
+      text-align: center;
+      opacity: 1;
+      visibility: visible;
+    }
 
-.container .card .content {
-  position: relative;
-  margin-top: -140px;
-  padding: 10px 15px;
-  text-align: center;
-  color: #111;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: .3s ease-in-out;
-  transition: .3s ease-in-out;
-}
-</style>
-<header>
-	<nav>
-		<ul class="menu">
-			<li><a href="#"><span class="icon-house">inicio</span></a></li>
-			<li><a href="#">Store</a></li>
-			
-			<li><a href="#">iTunes</a></li>
-			<li><a href="#">Support</a></li>
-		</ul>
-		<div class="search_bar">
-			<a href="#" class="icon-search"></a>
-			<input type="text" id="bar">
-		</div>
-	</nav>
-</header>
+    .container .card .content h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .container .card .content p {
+      font-size: 16px;
+      color: #6e6e73;
+    }
+
+    .container .card .content .button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007aff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .container .card .content .button:hover {
+      background-color: #005bb5;
+    }
+
+    /* Texto informativo */
+    .info-text {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+      color: #6e6e73;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 10px;
+        flex-direction: row; /* Mantener horizontal */
+        flex-wrap: wrap; /* Permitir que los elementos se ajusten si es necesario */
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: row; /* Menú horizontal en móviles */
+        justify-content: center;
+        align-items: center;
+        width: auto;
+      }
+
+      .menu li {
+        margin: 0 10px; /* Reducir margen para que quepa en pantallas pequeñas */
+      }
+
+      .menu li a {
+        font-size: 12px; /* Reducir tamaño de fuente para mejor ajuste */
+      }
+
+      .search_bar {
+        width: 150px; /* Reducir ancho de la barra de búsqueda */
+        margin-left: auto; /* Alinear a la derecha */
+      }
+
+      .search_bar input {
+        font-size: 12px;
+        padding: 6px 12px 6px 30px;
+      }
+
+      .icon-search {
+        font-size: 12px;
+      }
+
+      .container .card {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .menu li {
+        margin: 0 8px; /* Ajuste adicional para pantallas muy pequeñas */
+      }
+
+      .menu li a {
+        font-size: 11px; /* Tamaño de fuente aún más pequeño */
+      }
+
+      .search_bar {
+        width: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <nav>
+      <ul class="menu">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Store</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+      <div class="search_bar">
+        <span class="icon-search">🔍</span>
+        <input type="text" id="bar" placeholder="Buscar">
+      </div>
+    </nav>
+  </header>
 
-<h1>Bienvenido a Halleytech</h1>
- 
-  <!-- <p>Esta visita ha sido registrada con fines de control personal.</p> -->
-    <div class="container">
-        <div class="card">
-            <div class="imgbox">
-                <img src="logo.jpeg" alt="flower">
-            </div>
-            <div class="content">
-                <h2>Raindrop On Flowers</h2>
-                <p>Lorem ipsum, dolor sit amet<button class="button" ><a href="trabajos.html">ver</a></button> consectetur adipisicing elit. Blanditiis, soluta!</p>
-            </div>
-        </div>
+  <h1>Bienvenido a Halley Tech</h1>
 
-        <div class="card">
-            <div class="imgbox">
-                <img src="logo.jpeg" alt="paraglyding">
-            </div>
-            <div class="content">
-                <h2>Paraglyding</h2>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, expedita?</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="imgbox">
-                <img src="fondo.png" alt="leaves">
-            </div>
-            <div class="content">
-                <h2>Leaves with rain drops</h2>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique, beatae?</p>
-            </div>
-        </div>
+  <div class="container">
+    <div class="card">
+      <div class="imgbox">
+        <img src="logo.jpeg" alt="flower">
+      </div>
+      <div class="content">
+        <h2>Raindrop On Flowers</h2>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Blanditiis, solu
+ta!</p>
+        <a href="trabajos.html" class="button">Ver</a>
+      </div>
     </div>
-<!--   <p>
-  <span>
-    Halley Tech
-  </span>
-</p> -->
 
-<h2>*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-*texto informativo
-</h2>
-<script>
-var menu = $('.menu');
-var barra_busqueda = $('.search_bar');
-var bar = $('#bar');
-var icono = $('.icon-search');
+    <div class="card">
+      <div class="imgbox">
+        <img src="logo.jpeg" alt="paraglyding">
+      </div>
+      <div class="content">
+        <h2>Paraglyding</h2>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, expedita?</p>
+        <a href="#" class="button">Ver</a>
+      </div>
+    </div>
 
-barra_busqueda.focusin(function(){
-	barra_busqueda.css('width', '20%');
-	menu.css('width', '80%');
-	icono.css('color', '#000');
-	bar.css('color', '#000');
-});
+    <div class="card">
+      <div class="imgbox">
+        <img src="fondo.png" alt="leaves">
+      </div>
+      <div class="content">
+        <h2>Leaves with Rain Drops</h2>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique, beatae?</p>
+        <a href="#" class="button">Ver</a>
+      </div>
+    </div>
+  </div>
 
-barra_busqueda.focusout(function(){
-	barra_busqueda.css('width', '15%');
-	menu.css('width', '85%');
-	icono.css('color', '#fff');
-	bar.css('color', '#fff');
-});
- </script>
+  <div class="info-text">
+    <p>Somos una compañía dedicada a la creación de software para el hogar y la industria con proyección hacia el desarrollo de tecnologías IFTTT de internet de las cosas..</p>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      var barra_busqueda = $('.search_bar');
+      var bar = $('#bar');
+      var icono = $('.icon-search');
+
+      bar.focusin(function() {
+        barra_busqueda.css('width', '250px');
+        icono.css('color', '#000');
+        bar.css('color', '#000');
+      });
+
+      bar.focusout(function() {
+        barra_busqueda.css('width', '200px');
+        icono.css('color', '#fff');
+        bar.css('color', '#fff');
+      });
+    });
+  </script>
 </body>
 </html>
