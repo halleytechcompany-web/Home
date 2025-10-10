@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://necolas.github.io/normalize.css/3.0.1/normalize.css">
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet" href="https://i.icomoon.io/public/temp/3c94f042fc/UntitledProject2/style.css">
+<style>
+ body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('fondo.jpg') no-repeat center center fixed; /* Cambia 'fondo.jpg' por la ruta de tu imagen */
+            background-size: cover;
+        }
+	  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  min-height: 100vh;
+  background: #16384c;
+  font-family: 'Roboto', sans-serif;
+}
+* {
+	margin:0;
+	padding:0;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+header {|
+	width:100%;
+}
+
+nav {
+	width:  1000px;
+	margin:20px auto;
+	overflow:hidden;
+	border-radius:4px;
+	border-bottom:1px solid #555555;
+
+	background: #8b8b8b; /* Old browsers */
+	background: -moz-linear-gradient(top,  #8b8b8b 0%, #6a6a6a 50%, #5e5e5e 51%, #717171 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8b8b8b), color-stop(50%,#6a6a6a), color-stop(51%,#5e5e5e), color-stop(100%,#717171)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #8b8b8b 0%,#6a6a6a 50%,#5e5e5e 51%,#717171 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8b8b8b', endColorstr='#717171',GradientType=0 ); /* IE6-9 */
+}
+
+.menu {
+	width:85%;
+	display:table;
+	table-layout:fixed;
+	float:left;
+	transition:all .5s ease;
+}
+
+.menu li {
+	display:table-cell;
+	overflow:hidden;
+	width:100%;
+	border-right:1px solid #5c5c5c;
+	border-left:1px solid rgba(255,255,255,.2);
+}
+
+.menu li:first-child {
+	border-left:none;
+}
+
+.menu li:first-child:hover {
+	border-left:none;
+}
+
+.menu li a {
+	color:#fff;
+	display:block;
+	font-family:"Myriad Pro";
+	font-size:14px;
+	padding:10px 0;
+	text-align:center;
+	text-decoration:none;
+	text-shadow:1px 1px 0px rgba(0,0,0,.3);
+}
+
+.menu li:hover {
+	background:rgba(0,0,0,.3);
+	border-right:1px solid transparent;
+	border-left:1px solid transparent;
+	border-bottom:none;
+}
+
+.menu li:active {
+	background:rgba(0,0,0,.3);
+	box-shadow:inset 0px 3px 2px rgba(0,0,0,1);
+}
+
+.search_bar {
+	width:15%;
+	float:left;
+	padding:7px 10px;
+	box-sizing:border-box;
+	position: relative;
+	transition:all .5s ease;
+}
+
+.search_bar input {
+	width:100%;
+	height:auto;
+	border-radius:50px;
+	border:none;
+	border-bottom:1px solid #858585;
+	padding:0px 10px 0px 25px;
+	box-sizing:border-box;
+	height:22px;
+
+	box-shadow:inset 0px 1px 3px rgba(0,0,0,.7);
+
+	background: #7e7e7e; /* Old browsers */
+	background: -moz-linear-gradient(top,  #7e7e7e 0%, #797979 50%, #6e6e6e 51%, #767676 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7e7e7e), color-stop(50%,#797979), color-stop(51%,#6e6e6e), color-stop(100%,#767676)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #7e7e7e 0%,#797979 50%,#6e6e6e 51%,#767676 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7e7e7e', endColorstr='#767676',GradientType=0 ); /* IE6-9 */
+}
+
+.search_bar input:focus {
+	background:#fff;
+	box-shadow:none;
+}
+
+.icon-house {
+	display:block;
+	position:relative;
+	top:2px;
+}
+
+.icon-search {
+	position:absolute;
+	bottom:10px;
+	left:15px;
+	color:#fff;
+	text-decoration:none;
+}
+ h3 {
+ color: black; font-size: 35px;
+ text-shadow: 2px 2px #465FFF;
+ font-family:Verdana;
+ }
+
+.container {
+  position: relative;
+  width: 1100px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding: 30px;
+}
+
+.container .card {
+  position: relative;
+  max-width: 320px;
+  height: 250px;
+  background: #ccc;
+  margin: 30px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  -webkit-transition: .3s ease-in-out;
+  transition: .3s ease-in-out;
+}
+
+.container .card:hover {
+  height: 360px;
+}
+
+.container .card:hover .content {
+  visibility: visible;
+  opacity: 1;
+  margin-top: -20px;
+  -webkit-transition-delay: .3s;
+          transition-delay: .3s;
+}
+
+.container .card .imgbox {
+  position: relative;
+  height: 260px;
+  width: 260px;
+  top: -40px;
+  left: 30px;
+  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.container .card .imgbox img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.container .card .content {
+  position: relative;
+  margin-top: -140px;
+  padding: 10px 15px;
+  text-align: center;
+  color: #111;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: .3s ease-in-out;
+  transition: .3s ease-in-out;
+}
+</style>
+<header>
+	<nav>
+		<ul class="menu">
+			<li><a href="#"><span class="icon-house">inicio</span></a></li>
+			<li><a href="#">Store</a></li>
+			
+			<li><a href="#">iTunes</a></li>
+			<li><a href="#">Support</a></li>
+		</ul>
+		<div class="search_bar">
+			<a href="#" class="icon-search"></a>
+			<input type="text" id="bar">
+		</div>
+	</nav>
+</header>
+</head>
+<body>
+
+<h1>Bienvenido a Halleytech</h1>
+ 
+  <!-- <p>Esta visita ha sido registrada con fines de control personal.</p> -->
+    <div class="container">
+        <div class="card">
+            <div class="imgbox">
+                <img src="logo.jpeg" alt="flower">
+            </div>
+            <div class="content">
+                <h2>Raindrop On Flowers</h2>
+                <p>Lorem ipsum, dolor sit amet<button class="button" ><a href="trabajos.html">ver</a></button> consectetur adipisicing elit. Blanditiis, soluta!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="imgbox">
+                <img src="logo.jpeg" alt="paraglyding">
+            </div>
+            <div class="content">
+                <h2>Paraglyding</h2>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, expedita?</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="imgbox">
+                <img src="fondo.png" alt="leaves">
+            </div>
+            <div class="content">
+                <h2>Leaves with rain drops</h2>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique, beatae?</p>
+            </div>
+        </div>
+    </div>
+<!--   <p>
+  <span>
+    Halley Tech
+  </span>
+</p> -->
+
+<h2>*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+*texto informativo
+</h2>
+<script>
+var menu = $('.menu');
+var barra_busqueda = $('.search_bar');
+var bar = $('#bar');
+var icono = $('.icon-search');
+
+barra_busqueda.focusin(function(){
+	barra_busqueda.css('width', '20%');
+	menu.css('width', '80%');
+	icono.css('color', '#000');
+	bar.css('color', '#000');
+});
+
+barra_busqueda.focusout(function(){
+	barra_busqueda.css('width', '15%');
+	menu.css('width', '85%');
+	icono.css('color', '#fff');
+	bar.css('color', '#fff');
+});
+ </script>
+</body>
+</html>
