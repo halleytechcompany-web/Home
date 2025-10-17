@@ -332,9 +332,70 @@ body {
       });
     });
   </script>
+   <script type="module">
+        // Importa Firebase modularmente
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
+
+        // Tu configuración de Firebase (obténla del panel de Firebase)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
+    authDomain: "registros-29b03.firebaseapp.com",
+    databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
+    projectId: "registros-29b03",
+    storageBucket: "registros-29b03.firebasestorage.app",
+    messagingSenderId: "441228504173",
+    appId: "1:441228504173:web:5d991bf1642ddb9b88a364",
+    measurementId: "G-X5YR7X2SWH"
+  };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Función para registrar datos de navegación
+        function registrarDatosNavegacion() {
+            // Datos a registrar
+            const datos = {
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                referrer: document.referrer || 'Directo',
+                anchoPantalla: window.screen.width,
+                altoPantalla: window.screen.height,
+                idioma: navigator.language
+            };
+
+            // Referencia en Firebase (guarda en una colección simple con timestamp como clave)
+            const referencia = ref(db, 'navegacion/' + Date.now());
+
+            // Envía los datos a Firebase
+           set(referencia, datos)
+    .then(() => {
+        console.log('Datos de navegación registrados exitosamente en Firebase:', datos);
+        // alert('¡Datos enviados a Firebase!'); // <- Eliminado
+    })
+    .catch((error) => {
+        console.error('Error al registrar datos:', error);
+        // alert('Error: ' + error.message); // <- Eliminado
+    });
+
+        }
+
+        // Activa el registro al cargar la página (o puedes llamarlo en un evento)
+        window.addEventListener('load', () => {
+            registrarDatosNavegacion();  // Se ejecuta automáticamente al cargar
+        });
+
+        // Opcional: Botón para registrar manualmente
+        function onClickRegistrar() {
+            registrarDatosNavegacion();
+        }
+    </script>
 </body>
 
 </html>
+
 
 
 
