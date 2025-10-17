@@ -332,85 +332,86 @@ body {
       });
     });
   </script>
-    <script type="module">
-        // Importa Firebase modularmente
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
-        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
+   <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
+    import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
 
-        // Tu configuración de Firebase (obténla del panel de Firebase)
-  const firebaseConfig = {
-    apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
-    authDomain: "registros-29b03.firebaseapp.com",
-    databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
-    projectId: "registros-29b03",
-    storageBucket: "registros-29b03.firebasestorage.app",
-    messagingSenderId: "441228504173",
-    appId: "1:441228504173:web:5d991bf1642ddb9b88a364",
-    measurementId: "G-X5YR7X2SWH"
-  };
+    // 🔧 Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBPZPPUt72C5MUm1WBbL9udLENeUnaj6Oc",
+        authDomain: "registros-29b03.firebaseapp.com",
+        databaseURL: "https://registros-29b03-default-rtdb.firebaseio.com",
+        projectId: "registros-29b03",
+        storageBucket: "registros-29b03.firebasestorage.app",
+        messagingSenderId: "441228504173",
+        appId: "1:441228504173:web:5d991bf1642ddb9b88a364",
+        measurementId: "G-X5YR7X2SWH"
+    };
 
-        // Inicializa Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    // 🔥 Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        // Función para obtener IP y datos geográficos desde ipapi.co
-        async function obtenerIPyGeo() {
-            try {
-                const r = await fetch('https://ipapi.co/json/');
-                if (!r.ok) throw new Error('Respuesta no OK desde ipapi: ' + r.status);
-                const j = await r.json();
-                return j; // contiene ip, city, region, country_name, etc.
-            } catch (e) {
-                console.warn('No fue posible obtener IP/geo:', e);
-                return { ip: 'Desconocida', city: '', region: '', country_name: '' };
-            }
+    // 🧠 Genera un identificador anónimo para el visitante
+    const idVisitante = localStorage.getItem('visitanteID') || crypto.randomUUID();
+    localStorage.setItem('visitanteID', idVisitante);
+
+    let tiempoInicio = Date.now();
+    let contadorDeClicks = 0;
+    document.addEventListener('click', () => contadorDeClicks++);
+
+    // 🌐 Obtener IP y datos de ubicación
+    async function obtenerIPyGeo() {
+        try {
+            const r = await fetch('https://ipapi.co/json/');
+            if (!r.ok) throw new Error('Respuesta no OK desde ipapi: ' + r.status);
+            const j = await r.json();
+            return j;
+        } catch (e) {
+            console.warn('No fue posible obtener IP/geo:', e);
+            return { ip: 'Desconocida', city: '', region: '', country_name: '' };
         }
+    }
 
-        // Función para registrar datos de navegación (ahora con IP)
-        async function registrarDatosNavegacion() {
-            try {
-                const datosIP = await obtenerIPyGeo();
+    // 📊 Registrar sesión completa (datos técnicos + IP)
+    async function registrarSesion() {
+        try {
+            const datosIP = await obtenerIPyGeo();
+            const duracionSegundos = Math.round((Date.now() - tiempoInicio) / 1000);
 
-                // Datos a registrar
-                const datos = {
-                    url: window.location.href,
-                    userAgent: navigator.userAgent,
-                    timestamp: new Date().toISOString(),
-                    referrer: document.referrer || 'Directo',
-                    anchoPantalla: window.screen.width,
-                    altoPantalla: window.screen.height,
-                    idioma: navigator.language,
-                    ip: datosIP.ip || 'Desconocida',
-                    pais: datosIP.country_name || 'Desconocido',
-                    region: datosIP.region || '',
-                    ciudad: datosIP.city || ''
-                };
+            const datos = {
+                idVisitante,
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                idioma: navigator.language,
+                dispositivo: navigator.platform,
+                resolucion: `${window.screen.width}x${window.screen.height}`,
+                referrer: document.referrer || 'Directo',
+                clicks: contadorDeClicks,
+                tiempoEnPagina: duracionSegundos,
+                ip: datosIP.ip || 'Desconocida',
+                pais: datosIP.country_name || 'Desconocido',
+                region: datosIP.region || '',
+                ciudad: datosIP.city || ''
+            };
 
-                // Referencia en Firebase (guarda en una colección simple con timestamp como clave)
-                const referencia = ref(db, 'navegacion/' + Date.now());
-
-                // Envía los datos a Firebase
-                await set(referencia, datos);
-                console.log('✅ Datos de navegación registrados exitosamente en Firebase:', datos);
-            } catch (error) {
-                console.error('Error al registrar datos:', error);
-            }
+            const referencia = ref(db, 'sesiones_privadas/' + Date.now());
+            await set(referencia, datos);
+            console.log('✅ Sesión privada registrada en Firebase:', datos);
+        } catch (error) {
+            console.error('Error al registrar sesión:', error);
         }
+    }
 
-        // Activa el registro al cargar la página
-        window.addEventListener('load', () => {
-            // Llamada silenciosa al cargar
-            registrarDatosNavegacion();
-        });
-
-        // Opcional: Botón para registrar manualmente
-        function onClickRegistrar() {
-            registrarDatosNavegacion();
-        }
-    </script>
+    // 🚀 Registrar automáticamente unos segundos después de cargar
+    window.addEventListener('load', () => {
+        setTimeout(registrarSesion, 3000);
+    });
+</script>
 </body>
 
 </html>
+
 
 
 
