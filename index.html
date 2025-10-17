@@ -332,7 +332,7 @@ body {
       });
     });
   </script>
-   <script type="module">
+    <script type="module">
         // Importa Firebase modularmente
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
         import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js';
@@ -353,38 +353,54 @@ body {
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Función para registrar datos de navegación
-        function registrarDatosNavegacion() {
-            // Datos a registrar
-            const datos = {
-                url: window.location.href,
-                userAgent: navigator.userAgent,
-                timestamp: new Date().toISOString(),
-                referrer: document.referrer || 'Directo',
-                anchoPantalla: window.screen.width,
-                altoPantalla: window.screen.height,
-                idioma: navigator.language
-            };
-
-            // Referencia en Firebase (guarda en una colección simple con timestamp como clave)
-            const referencia = ref(db, 'navegacion/' + Date.now());
-
-            // Envía los datos a Firebase
-           set(referencia, datos)
-    .then(() => {
-        console.log('Datos de navegación registrados exitosamente en Firebase:', datos);
-        // alert('¡Datos enviados a Firebase!'); // <- Eliminado
-    })
-    .catch((error) => {
-        console.error('Error al registrar datos:', error);
-        // alert('Error: ' + error.message); // <- Eliminado
-    });
-
+        // Función para obtener IP y datos geográficos desde ipapi.co
+        async function obtenerIPyGeo() {
+            try {
+                const r = await fetch('https://ipapi.co/json/');
+                if (!r.ok) throw new Error('Respuesta no OK desde ipapi: ' + r.status);
+                const j = await r.json();
+                return j; // contiene ip, city, region, country_name, etc.
+            } catch (e) {
+                console.warn('No fue posible obtener IP/geo:', e);
+                return { ip: 'Desconocida', city: '', region: '', country_name: '' };
+            }
         }
 
-        // Activa el registro al cargar la página (o puedes llamarlo en un evento)
+        // Función para registrar datos de navegación (ahora con IP)
+        async function registrarDatosNavegacion() {
+            try {
+                const datosIP = await obtenerIPyGeo();
+
+                // Datos a registrar
+                const datos = {
+                    url: window.location.href,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString(),
+                    referrer: document.referrer || 'Directo',
+                    anchoPantalla: window.screen.width,
+                    altoPantalla: window.screen.height,
+                    idioma: navigator.language,
+                    ip: datosIP.ip || 'Desconocida',
+                    pais: datosIP.country_name || 'Desconocido',
+                    region: datosIP.region || '',
+                    ciudad: datosIP.city || ''
+                };
+
+                // Referencia en Firebase (guarda en una colección simple con timestamp como clave)
+                const referencia = ref(db, 'navegacion/' + Date.now());
+
+                // Envía los datos a Firebase
+                await set(referencia, datos);
+                console.log('✅ Datos de navegación registrados exitosamente en Firebase:', datos);
+            } catch (error) {
+                console.error('Error al registrar datos:', error);
+            }
+        }
+
+        // Activa el registro al cargar la página
         window.addEventListener('load', () => {
-            registrarDatosNavegacion();  // Se ejecuta automáticamente al cargar
+            // Llamada silenciosa al cargar
+            registrarDatosNavegacion();
         });
 
         // Opcional: Botón para registrar manualmente
@@ -395,6 +411,7 @@ body {
 </body>
 
 </html>
+
 
 
 
