@@ -3,13 +3,23 @@
 <head>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <meta charset="UTF-8" />
- <script>
-    window.onload = function() {
+<script>
+window.onload = function() {
+
+    // ¿Ya redirigió en esta sesión?
+    if (!sessionStorage.getItem("redirigidoSesion")) {
+
+        // marcar que ya redirigió en esta sesión
+        sessionStorage.setItem("redirigidoSesion", "true");
+
+        // redirigir después de 5 segundos
         setTimeout(function() {
             window.location.href = "https://halleytechcompany-web.github.io/Home/";
-        }, 1000);
-    };
-    </script>
+        }, 5000);
+    }
+
+};
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Halley Tech</title>
   <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
@@ -419,6 +429,7 @@ body {
 </body>
 
 </html>
+
 
 
 
