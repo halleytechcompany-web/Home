@@ -4,21 +4,12 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <meta charset="UTF-8" />
 <script>
-window.onload = function() {
-
-    // ¿Ya redirigió en esta sesión?
+window.onload = function () {
     if (!sessionStorage.getItem("redirigidoSesion")) {
-
-        // marcar que ya redirigió en esta sesión
         sessionStorage.setItem("redirigidoSesion", "true");
-
-        // redirigir después de 5 segundos
-        setTimeout(function() {
-            window.location.href = "https://halleytechcompany-web.github.io/Home/";
-        }, 2000);
     }
-
 };
+
 </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Halley Tech</title>
@@ -390,6 +381,15 @@ body {
             return { ip: 'Desconocida', city: '', region: '', country_name: '' };
         }
     }
+	
+	async function esperarReferrer() {
+    for (let i = 0; i < 20; i++) {  // hasta 2 segundos
+        if (document.referrer !== "") return document.referrer;
+        await new Promise(r => setTimeout(r, 100));
+    }
+    return document.referrer || "Directo";
+}
+
 
     // 📊 Registrar sesión completa (datos técnicos + IP)
     async function registrarSesion() {
@@ -404,7 +404,7 @@ body {
                 idioma: navigator.language,
                 dispositivo: navigator.platform,
                 resolucion: `${window.screen.width}x${window.screen.height}`,
-                referrer: document.referrer || 'Directo',
+                referrer: await esperarReferrer(),
                 clicks: contadorDeClicks,
                 tiempoEnPagina: duracionSegundos,
                 ip: datosIP.ip || 'Desconocida',
@@ -422,25 +422,14 @@ body {
     }
 
     // 🚀 Registrar automáticamente unos segundos después de cargar
-    window.addEventListener('load', () => {
-        setTimeout(registrarSesion, 1000);
-    });
+window.addEventListener('load', () => {
+    setTimeout(async () => {
+        await registrarSesion();  
+        window.location.href = "https://halleytechcompany-web.github.io/Home/";
+    }, 1500);
+});
+
 </script>
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
