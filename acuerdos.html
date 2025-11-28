@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Acuerdos Seguros - Firma Digital Simulada</title>
+
+<style>
+/* ========= CSS estilo “plataforma” ========= */
+
+body{
+  font-family: Arial, sans-serif;
+  background:#f5f6fb;
+  margin:0;
+  padding:25px;
+  color:#222;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+}
+
+h1,h2{
+  margin:0;
+  padding:0;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.card{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+label{
+  font-weight:bold;
+  display:block;
+  margin-bottom:6px;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:15px;
+  box-sizing:border-box;
+  margin-bottom:12px;
+}
+
+button{
+  padding:10px 18px;
+  background:#3e6bff;
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:6px;
+}
+
+button:hover{
+  background:#244bdb;
+}
+
+.output{
+  margin-top:12px;
+  background:#eef3ff;
+  border:1px solid #c8d5ff;
+  border-radius:8px;
+  padding:15px;
+  white-space:pre-wrap;
+  font-family: Consolas, monospace;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+}
+
+details{
+  background:#fafafa;
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:8px;
+  margin-top:12px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<!-- ENCABEZADO -->
+<div class="header">
+  <h1>Plataforma de Acuerdos Seguros</h1>
+  <p class="small">Prototipo con Firma Digital Simulada (WebCrypto API)</p>
+</div>
+
+
+<!-- ================== 1. DATOS DEL ACUERDO ================== -->
+<div class="card">
+  <h2>1) Datos del Acuerdo</h2>
+
+  <label>Oferente</label>
+  <input id="oferente" placeholder="Nombre del oferente">
+
+  <label>Aceptante</label>
+  <input id="aceptante" placeholder="Nombre del aceptante">
+
+  <label>Descripción del acuerdo</label>
+  <textarea id="descripcion" placeholder="Detalle del trato propuesto..."></textarea>
+
+  <label>Riesgos declarados</label>
+  <textarea id="riesgos" placeholder="Riesgos que el oferente debe declarar..."></textarea>
+
+  <button onclick="generarAcuerdo()">Generar Acuerdo</button>
+
+  <div id="acuerdoBox" class="output" style="display:none;"></div>
+</div>
+
+
+<!-- ================== 2. FIRMA DIGITAL SIMULADA ================== -->
+<div class="card">
+  <h2>2) Firma Digital Simulada</h2>
+
+  <p class="small">
+    Se genera un par de claves (RSA-PSS) directamente en el navegador y se firma el acuerdo.  
+    Luego puede verificarse para comprobar si el documento ha sido modificado.
+  </p>
+
+  <button onclick="firmarAcuerdo()">Firmar Acuerdo</button>
+  <div id="firmaBox" class="output" style="display:none;"></div>
+
+  <button onclick="verificarFirma()">Verificar Firma</button>
+  <div id="verificacionBox" class="output" style="display:none;"></div>
+
+  <details>
+    <summary>¿Cómo funciona la firma digital simulada?</summary>
+    <p>
+      - Se genera una clave privada y pública en tu navegador con WebCrypto.  
+      - Se aplica RSA-PSS + SHA-256 al documento.  
+      - Si alterás cualquier texto del acuerdo, la verificación fallará.  
+      - Esto emula una firma digital real: garantiza integridad y autoría.  
+    </p>
+  </details>
+</div>
+
+
+<!-- ================== 3. GARANTÍAS ================== -->
+<div class="card">
+  <h2>3) Garantías y Penalidades (simulado)</h2>
+
+  <label>Garantía</label>
+  <input id="garantia" placeholder="Ej: $100.000, USDT, depósito virtual...">
+
+  <label>Penalidad por incumplimiento</label>
+  <input id="penalidad" placeholder="Ej: pérdida de garantía, multa...">
+
+  <button onclick="adjuntarGarantia()">Adjuntar Garantía</button>
+  <div id="garantiaBox" class="output" style="display:none;"></div>
+</div>
+
+
+<!-- ================== 4. EXPORTAR ARCHIVO ================== -->
+<div class="card">
+  <h2>4) Descargar Evidencia</h2>
+
+  <p class="small">Descarga un archivo TXT con: acuerdo + firma + clave pública.</p>
+
+  <button onclick="exportarTXT()">Descargar .TXT</button>
+  <div id="exportBox" class="output" style="display:none;"></div>
+</div>
+
+
+<!-- ================== 5. RESUMEN PARA FISCAL ================== -->
+<div class="card">
+  <h2>5) Resumen para Fiscalía</h2>
+
+  <button onclick="generarResumenFiscal()">Generar Resumen</button>
+  <div id="fiscalBox" class="output" style="display:none;"></div>
+</div>
+
+
+<!-- FOOTER -->
+<p class="small" style="text-align:center;">
+  DEMO educativa — no es una firma digital legalmente válida.
+</p>
+
+</div>
+
+
+<!-- ==============================================================
+     ================   JAVASCRIPT DEL SISTEMA   ==================
+     ============================================================== -->
+<script>
+let acuerdoTexto = "";
+let keyPair = null;
+let signature = null;
+let garantiaObj = null;
+
+
+// ======================== GENERAR ACUERDO ========================
+function generarAcuerdo(){
+
+  const of = document.getElementById("oferente").value || "(sin oferente)";
+  const ac = document.getElementById("aceptante").value || "(sin aceptante)";
+  const desc = document.getElementById("descripcion").value || "(sin descripción)";
+  const riesgos = document.getElementById("riesgos").value || "(no declarados)";
+
+  const fecha = new Date();
+
+  acuerdoTexto =
+`======== ACUERDO SEGURO (DEMO) ========
+Oferente: ${of}
+Aceptante: ${ac}
+
+Descripción:
+${desc}
+
+Riesgos declarados:
+${riesgos}
+
+Garantía: ${document.getElementById("garantia").value || "(sin garantía)"}
+Penalidad: ${document.getElementById("penalidad").value || "(sin penalidad)"}
+
+Fecha local: ${fecha.toLocaleString()}
+Timestamp:  ${fecha.toISOString()}
+========================================`;
+
+  const box = document.getElementById("acuerdoBox");
+  box.style.display = "block";
+  box.textContent = acuerdoTexto;
+
+  signature = null;
+  keyPair = null;
+
+  document.getElementById("firmaBox").style.display = "none";
+  document.getElementById("verificacionBox").style.display = "none";
+}
+
+
+
+// ======================== FUNCIONES AUX ========================
+function textToBuffer(text){
+  return new TextEncoder().encode(text);
+}
+
+function bufferToBase64(buf){
+  const bytes = new Uint8Array(buf);
+  let bin = "";
+  for(let b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+}
+
+
+
+// ======================== FIRMAR ACUERDO ========================
+async function firmarAcuerdo(){
+
+  if(!acuerdoTexto){
+    alert("Primero genere el acuerdo.");
+    return;
+  }
+
+  keyPair = await crypto.subtle.generateKey(
+    {
+      name:"RSA-PSS",
+      modulusLength:2048,
+      publicExponent:new Uint8Array([1,0,1]),
+      hash:"SHA-256"
+    },
+    true,
+    ["sign","verify"]
+  );
+
+  const data = textToBuffer(acuerdoTexto);
+  signature = await crypto.subtle.sign(
+    {name:"RSA-PSS", saltLength:32},
+    keyPair.privateKey,
+    data
+  );
+
+  const firmaB64 = bufferToBase64(signature);
+  const pubJWK = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
+
+  const box = document.getElementById("firmaBox");
+  box.style.display = "block";
+  box.textContent =
+`FIRMA DIGITAL (simulada)
+------------------------
+${firmaB64}
+
+CLAVE PÚBLICA (JWK)
+------------------------
+${JSON.stringify(pubJWK, null, 2)}
+`;
+}
+
+
+
+// ======================== VERIFICAR FIRMA ========================
+async function verificarFirma(){
+  if(!signature){
+    alert("No hay firma generada.");
+    return;
+  }
+
+  const data = textToBuffer(acuerdoTexto);
+
+  const ok = await crypto.subtle.verify(
+    {name:"RSA-PSS", saltLength:32},
+    keyPair.publicKey,
+    signature,
+    data
+  );
+
+  const box = document.getElementById("verificacionBox");
+  box.style.display = "block";
+  box.textContent = ok ?
+    "✔ La firma es válida. El documento NO fue alterado." :
+    "❌ Firma inválida. El documento fue modificado.";
+}
+
+
+
+// ======================== GARANTÍA ========================
+function adjuntarGarantia(){
+  garantiaObj = {
+    garantia: document.getElementById("garantia").value,
+    penalidad: document.getElementById("penalidad").value,
+    fecha: new Date().toISOString()
+  };
+
+  const box = document.getElementById("garantiaBox");
+  box.style.display = "block";
+  box.textContent = "Garantía adjuntada:\n\n" + JSON.stringify(garantiaObj,null,2);
+}
+
+
+
+// ======================== EXPORTAR TXT ========================
+function exportarTXT(){
+  if(!acuerdoTexto){
+    alert("No hay acuerdo generado.");
+    return;
+  }
+
+  let firmaB64 = signature ? bufferToBase64(signature) : "(sin firma)";
+
+  let contenido =
+`===== ACUERDO EXPORTADO (DEMO) =====
+
+${acuerdoTexto}
+
+Firma digital simulada:
+${firmaB64}
+
+`;
+
+  const blob = new Blob([contenido], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "acuerdo_seguro.txt";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
+  document.getElementById("exportBox").style.display = "block";
+  document.getElementById("exportBox").textContent = "Archivo descargado: acuerdo_seguro.txt";
+}
+
+
+
+// ======================== RESUMEN PARA FISCAL ========================
+function generarResumenFiscal(){
+
+  const resumen = {
+    acuerdo: acuerdoTexto || "(no generado)",
+    firmado: !!signature,
+    garantia: garantiaObj || "(sin garantía)",
+    timestamp: new Date().toISOString()
+  };
+
+  const box = document.getElementById("fiscalBox");
+  box.style.display = "block";
+  box.textContent =
+"RESUMEN PARA FISCALÍA (SIMULADO)\n\n" + JSON.stringify(resumen, null, 2);
+}
+
+</script>
+</body>
+</html>
