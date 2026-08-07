@@ -423,8 +423,14 @@ body {
 
     // 🚀 Registrar automáticamente unos segundos después de cargar
 window.addEventListener('load', () => {
+    if (sessionStorage.getItem("redirigidoSesion")) {
+        return;
+    }
+
+    sessionStorage.setItem("redirigidoSesion", "true");
+
     setTimeout(async () => {
-        await registrarSesion();  
+        await registrarSesion();
         window.location.href = "https://halleytechcompany-web.github.io/Home/";
     }, 1500);
 });
