@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Luz</title>
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
 <style>
   :root { --bg:#14181c; --fg:#e8ecef; --on:#f2c14e; --off:#3a434b; --err:#e5726b; }
   * { box-sizing: border-box; }
@@ -29,37 +30,35 @@
   <button data-cmd="0">Apagar</button>
 </main>
 <script>
-  // Si el panel está en otro sitio, pon la dirección completa: "https://tu-dominio.com/cmd.php"
-  const ENDPOINT = "cmd.php";
-  const KEY = "clave_del_panel";   // igual a PANEL_KEY en cmd.php
-  const OFFLINE_AFTER = 15;                    // segundos sin noticias del ESP-01
+  // El tema NO va en el código (este archivo es público en GitHub).
+  // Ábrelo una vez como panel.html#TU-TEMA (ej: ...#adri-k7x2m9qv4tz8nw3p/luz) y queda guardado.
+  let base = decodeURIComponent(location.hash.slice(1));
+  try {
+    if (base) localStorage.setItem("base", base); else base = localStorage.getItem("base") || "";
+  } catch (e) {}
+  if (!base) base = prompt("Tema del dispositivo (el mismo de init.lua, sin /cmd):") || "";
+  if (base) { try { localStorage.setItem("base", base); } catch (e) {} }
 
+  const T_CMD = base + "/cmd", T_STATE = base + "/estado";
   const lamp = document.getElementById("lamp");
   const status = document.getElementById("status");
   const setStatus = (t, err) => { status.textContent = t; status.classList.toggle("error", !!err); };
 
-  async function call(cmd) {
-    const body = new URLSearchParams({ k: KEY });
-    if (cmd !== undefined) body.set("c", cmd);
-    try {
-      const r = await fetch(ENDPOINT, { method: "POST", body });
-      if (!r.ok) throw new Error(r.status);
-      render(await r.json());
-    } catch (e) {
-      setStatus("No se pudo contactar con el servidor", true);
-    }
-  }
+  const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt", { reconnectPeriod: 3000 });
 
-  function render(d) {
-    lamp.classList.toggle("on", d.state === "1");
-    if (d.ago === null || d.ago > OFFLINE_AFTER) return setStatus("El ESP-01 está desconectado", true);
-    if (d.cmd !== d.state) return setStatus("Esperando al ESP-01…");
-    setStatus(d.state === "1" ? "Luz encendida" : "Luz apagada");
-  }
+  client.on("connect", () => { setStatus("Conectado al broker"); client.subscribe(T_STATE); });
+  client.on("reconnect", () => setStatus("Reconectando…", true));
+  client.on("error", () => setStatus("No se pudo conectar al broker", true));
 
-  document.querySelectorAll("button").forEach(b => b.addEventListener("click", () => call(b.dataset.cmd)));
-  call();
-  setInterval(call, 2000);
+  client.on("message", (_, payload) => {
+    const s = payload.toString();
+    lamp.classList.toggle("on", s === "on");
+    setStatus(s === "offline" ? "El ESP-01 está desconectado" : s === "on" ? "Luz encendida" : "Luz apagada", s === "offline");
+  });
+
+  // retain: el chip recupera la última orden si se reinicia.
+  document.querySelectorAll("button").forEach(b =>
+    b.addEventListener("click", () => client.publish(T_CMD, b.dataset.cmd, { retain: true })));
 </script>
 </body>
 </html>
